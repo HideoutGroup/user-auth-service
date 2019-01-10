@@ -4,7 +4,7 @@ spring:
     application:
         name: base
     datasource:
-        url: jdbc:mysql://172.16.0.85:3306/base?characterEncoding=UTF-8
-        username: base
-        password: base123
-        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://db.sjdong.club:10075/user?characterEncoding=UTF-8
+        username: user
+        password: user1234
+       # driver-class-name: com.mysql.jdbc.Driver

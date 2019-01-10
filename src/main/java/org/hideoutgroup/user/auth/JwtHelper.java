@@ -1,12 +1,19 @@
 package org.hideoutgroup.user.auth;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.Base64Codec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
 import java.util.Date;
 
 /**
@@ -84,7 +91,7 @@ public class JwtHelper {
      * 获取客户信息
      * @param request
      * @return
-     * @throws CustomException
+     * @throws
      */
     public static String getIdByRequest(HttpServletRequest request) {
         String auth = request.getHeader("Authorization");
@@ -99,7 +106,8 @@ public class JwtHelper {
     }
 
     public static String createJWTByObj(TokenObject tokenObject) {
-        JSONObject jsonObject = JSONObject.parse(tokenObject);
+       // JSONObject jsonObject = JSONObject.parse(tokenObject);
+       JSONObject jsonObject = (JSONObject) JSONObject.toJSON(tokenObject);
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
         long nowMillis = System.currentTimeMillis();
