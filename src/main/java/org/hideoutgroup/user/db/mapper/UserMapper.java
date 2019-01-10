@@ -10,9 +10,9 @@ import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.type.JdbcType;
 import org.hideoutgroup.user.db.model.User;
-import org.simplesupermarket.web.db.ObjectCrudMapper;
 
-public interface UserMapper extends ObjectCrudMapper {
+
+public interface UserMapper   {
     @Delete({
         "delete from user",
         "where id = #{id,jdbcType=INTEGER}"

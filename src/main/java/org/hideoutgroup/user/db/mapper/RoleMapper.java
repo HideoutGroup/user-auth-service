@@ -10,9 +10,8 @@ import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.type.JdbcType;
 import org.hideoutgroup.user.db.model.Role;
-import org.simplesupermarket.web.db.ObjectCrudMapper;
 
-public interface RoleMapper extends ObjectCrudMapper {
+public interface RoleMapper   {
     @Delete({
         "delete from role",
         "where id = #{id,jdbcType=INTEGER}"
