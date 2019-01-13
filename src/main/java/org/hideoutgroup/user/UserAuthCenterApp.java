@@ -14,11 +14,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @MapperScan("org.hideoutgroup.user.db.mapper")
-public class RabbitConsumerApp {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitConsumerApp.class);
+public class UserAuthCenterApp {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserAuthCenterApp.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(RabbitConsumerApp.class, args);
+        SpringApplication.run(UserAuthCenterApp.class, args);
 
     }
 
