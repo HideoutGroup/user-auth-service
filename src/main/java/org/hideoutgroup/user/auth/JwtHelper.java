@@ -1,7 +1,7 @@
 package org.hideoutgroup.user.auth;
-import com.alibaba.fastjson.JSON;
+
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.alibaba.fastjson.JSONPObject;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,116 +10,95 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 /**
- * 
  * @author 董文强
- * @date 2019年01月10日
  * @version 1.0
+ * @date 2019年01月10日
  */
 public class JwtHelper {
- private static final Logger LOGGER = LoggerFactory.getLogger(JwtHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtHelper.class);
+
 
     /**
      * 校验Token
+     *
      * @param jwt
      * @param httpRequest
      * @return
      */
-    public static int checkToken(String jwt, HttpServletRequest httpRequest){
-        if (!StringUtils.isEmpty(jwt)){
-            if (jwt.split("\\.").length==3) {
-                LOGGER.info("jwt:" + jwt);
-                String[] split = jwt.split("\\.");
-                String content = split[1];
-                String s = Base64Codec.BASE64URL.decodeToString(content);
-                LOGGER.info("s:" + s);
-                String sign = split[2];
-                LOGGER.info("sign:" + sign);
-                JSONObject jsonObject1 = JSONObject.parseObject(s);
+    public static int checkToken(String jwt, HttpServletRequest httpRequest) {
+        if (StringUtils.isEmpty(jwt)) {
+            throw new RuntimeException("jwt 为空");
+        }
+        if (jwt.split("\\.").length != 3) {
+            throw new RuntimeException("jwt 格式不正确");
+        }
+        LOGGER.info("jwt:" + jwt);
+        String[] split = jwt.split("\\.");
+        String s = Base64Codec.BASE64URL.decodeToString(split[1]);
+
+        String sign = split[2];
+        LOGGER.info("sign:" + sign);
+        JSONObject jsonObject1 = JSONObject.parseObject(split[2]);
 
 
-                long nowMillis = System.currentTimeMillis();
-                Date now = new Date(nowMillis);
-                long expiresSecond = (long) jsonObject1.get("expiresSecond");
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        long expiresSecond = (long) jsonObject1.get("expiresSecond");
 
-                //判断是否过期
-                if(now.getTime()>expiresSecond)
-                    return 2;
+        //判断是否过期
+        if (now.getTime() > expiresSecond)
+            return 2;
 
 
-                TokenObject o =  JSONObject.toJavaObject(jsonObject1, TokenObject.class);
+        AuthUser o = JSONObject.toJavaObject(jsonObject1, AuthUser.class);
 
-                String jwtByStr = createJWTByObj(o);
-                String s2 = jwtByStr.split("\\.")[2];
-                LOGGER.info("s2:" + s2);
-                if (sign.equals(s2)) {
-                    return 1;
-                } else
-                    return 0;
-            }
+        String jwtByStr = createJWTByObj(o);
+        String s2 = jwtByStr.split("\\.")[2];
+        LOGGER.info("s2:" + s2);
+        if (sign.equals(s2)) {
+            return 1;
+
         }
         return 0;
     }
 
-    /**
-     * 获取用户id
-     * @param jwt
-     * @return
-     */
-    public static String  getIdByJWT(String jwt){
-        if (!StringUtils.isEmpty(jwt)) {
-            if (jwt.split("\\.").length == 3) {
-                LOGGER.info("jwt:" + jwt);
-                String[] split = jwt.split("\\.");
-                String content = split[1];
-                String s = Base64Codec.BASE64URL.decodeToString(content);
-                JSONObject jsonObject1 = JSONObject.parseObject(s);
-                TokenObject o = JSONObject.toJavaObject(jsonObject1, TokenObject.class);
-                return o.getUserId();
-            }
-        }
-        return null;
-    }
-
+   
     /**
      * 获取客户信息
-     * @param request
+     *
+     * @param token
      * @return
      * @throws
      */
-    public static String getIdByRequest(HttpServletRequest request) {
-        String auth = request.getHeader("Authorization");
-        if ((auth != null) && (auth.length() > 6)) {
-            String HeadStr = auth.substring(0, 5).toLowerCase();
-            if (HeadStr.compareTo("basic") == 0) {
-                auth = auth.substring(6, auth.length());
-                return JwtHelper.getIdByJWT(auth);
-            }
+    public static AuthObject getInfoByToken(String token) {
+        if ((token == null) || (token.length() < 6)) {
+            throw new RuntimeException("token no");
         }
-        return null;
+        String context =  Base64Codec.BASE64URL.decodeToString(token.split("\\.")[1]);
+        return JSONObject.parseObject(context,AuthUser.class);
+
     }
 
-    public static String createJWTByObj(TokenObject tokenObject) {
-       // JSONObject jsonObject = JSONObject.parse(tokenObject);
-       JSONObject jsonObject = (JSONObject) JSONObject.toJSON(tokenObject);
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-        long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
-
+    /**
+     * 创建jwt
+     */
+    public static String createJWTByObj(AuthObject authObject) {
         //生成签名密钥
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(tokenObject.getBase64Secret());
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        Key signingKey = new SecretKeySpec(authObject.toString().getBytes(), signatureAlgorithm.getJcaName());
+
         //添加构成JWT的参数
-        JwtBuilder builder = Jwts.builder().setHeaderParam("typ", "JWT")
-                .setHeaderParam("alg", "HS256")
-                .setPayload(jsonObject.toString())
+        JwtBuilder builder = Jwts.builder()
+                .setPayload(JSONObject.toJSON(authObject).toString())
                 .signWith(signatureAlgorithm, signingKey);
 
         //生成JWT
