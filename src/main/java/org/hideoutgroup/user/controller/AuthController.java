@@ -6,6 +6,7 @@ import org.hideoutgroup.user.auth.AuthUser;
 import org.hideoutgroup.user.service.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -20,6 +21,8 @@ import javax.validation.constraints.NotBlank;
 @RequestMapping("/auth")
 public class AuthController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+    @Autowired
+    TokenService tokenService;
 
     @PostMapping("/login")
     public String login(@Valid @RequestBody login user, HttpServletResponse response) {
@@ -27,7 +30,7 @@ public class AuthController {
         authUser.setRole("经理");
         authUser.setPassword(user.getPassword());
         authUser.setUsername(user.username);
-        String token = TokenService.createJWTByObj(authUser);
+        String token = tokenService.createJWTByObj(authUser);
         response.setHeader("token", token);
         LOGGER.info(token);
         return token;
@@ -41,8 +44,8 @@ public class AuthController {
     @RequestMapping("/ver")
     public AuthObject verToken(@RequestHeader("token") String token){
         LOGGER.info(token);
-        AuthObject authObject = TokenService.getInfoByToken(token);
-        TokenService.checkToken(authObject,token);
+        AuthObject authObject = tokenService.getInfoByToken(token);
+        tokenService.checkToken(authObject,token);
         return authObject;
     }
 

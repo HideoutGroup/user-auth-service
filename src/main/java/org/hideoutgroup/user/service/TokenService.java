@@ -7,6 +7,7 @@ import org.hideoutgroup.user.auth.AuthObject;
 import org.hideoutgroup.user.auth.AuthUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,7 +25,9 @@ import java.util.Map;
 public class TokenService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);
 
-    private static Map<String, Key> keyMap = new HashMap<>();
+
+    @Autowired
+    private SigningKeyService signingKeyService;
 
     /**
      * 校验Token
@@ -33,18 +36,26 @@ public class TokenService {
      * @param
      * @return
      */
-    public static int checkToken(AuthObject info, String token) {
+    public Boolean checkToken(AuthObject info, String token) {
         if (StringUtils.isEmpty(token)) {
             throw new RuntimeException("jwt 为空");
         }
         if (token.split("\\.").length != 3) {
             throw new RuntimeException("jwt 格式不正确");
         }
-        Jws<Claims> jwt = Jwts.parser()
-                .setSigningKey(keyMap.get(info.getUserId())) // <----
-                .parseClaimsJws(token);
-        LOGGER.info(jwt.getSignature());
-        return 0;
+        Key key = signingKeyService.getKey(info.getUserId());
+        if (key == null) {
+            throw new RuntimeException("key 不存在");
+        }
+        try {
+            Jws<Claims> jwt = Jwts.parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(token);
+            return jwt.getSignature().equals(token.split("\\.")[2]);
+        } catch (SignatureException e) {
+            return false;
+        }
+
     }
 
 
@@ -55,7 +66,7 @@ public class TokenService {
      * @return
      * @throws
      */
-    public static AuthObject getInfoByToken(String token) {
+    public AuthObject getInfoByToken(String token) {
         if ((token == null) || (token.length() < 6)) {
             throw new RuntimeException("token no");
         }
@@ -66,11 +77,11 @@ public class TokenService {
     /**
      * 创建jwt
      */
-    public static String createJWTByObj(AuthObject authObject) {
+    public String createJWTByObj(AuthObject authObject) {
         //生成签名密钥
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         Key signingKey = new SecretKeySpec(authObject.toString().getBytes(), signatureAlgorithm.getJcaName());
-        keyMap.put(authObject.getUserId(), signingKey);
+        signingKeyService.addKey(authObject.getUserId(), signingKey);
         //添加构成JWT的参数
         JwtBuilder builder = Jwts.builder()
                 .setPayload(JSONObject.toJSON(authObject).toString())
