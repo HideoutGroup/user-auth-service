@@ -1,8 +1,9 @@
 package org.hideoutgroup.user.controller;
 
 import lombok.Data;
+import org.hideoutgroup.user.auth.AuthObject;
 import org.hideoutgroup.user.auth.AuthUser;
-import org.hideoutgroup.user.auth.JwtHelper;
+import org.hideoutgroup.user.service.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class AuthController {
         authUser.setRole("经理");
         authUser.setPassword(user.getPassword());
         authUser.setUsername(user.username);
-        String token = JwtHelper.createJWTByObj(authUser);
+        String token = TokenService.createJWTByObj(authUser);
         response.setHeader("token", token);
         LOGGER.info(token);
         return token;
@@ -38,10 +39,11 @@ public class AuthController {
         @NotBlank String password;
     }
     @RequestMapping("/ver")
-    public String verToken(@RequestHeader("token") String token){
+    public AuthObject verToken(@RequestHeader("token") String token){
         LOGGER.info(token);
-        JwtHelper.getInfoByToken(token);
-        return "123";
+        AuthObject authObject = TokenService.getInfoByToken(token);
+        TokenService.checkToken(authObject,token);
+        return authObject;
     }
 
 
