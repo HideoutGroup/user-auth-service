@@ -24,11 +24,11 @@ public class AuthController {
     @Autowired
     TokenService tokenService;
 
+
     @PostMapping("/login")
     public String login(@Valid @RequestBody login user, HttpServletResponse response) {
         AuthUser authUser = new AuthUser();
         authUser.setRole("经理");
-        authUser.setPassword(user.getPassword());
         authUser.setUsername(user.username);
         String token = tokenService.createJWTByObj(authUser);
         response.setHeader("token", token);
@@ -36,11 +36,6 @@ public class AuthController {
         return token;
     }
 
-    @Data
-    static class login {
-        @NotBlank String username;
-        @NotBlank String password;
-    }
     @RequestMapping("/ver")
     public AuthObject verToken(@RequestHeader("token") String token){
         LOGGER.info(token);
@@ -49,5 +44,9 @@ public class AuthController {
         return authObject;
     }
 
-
+    @Data
+    static class login {
+        @NotBlank String username;
+        @NotBlank String password;
+    }
 }

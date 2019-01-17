@@ -29,6 +29,9 @@ class SigningKeyService {
         keys = new HashMap<>();
     }
 
+    /**
+     * 根据用户ID获取解密用的秘钥Key
+     * */
     public Key getKey(String userId) {
         byte[] keyByte = keys.get(userId);
         if(keyByte == null){
@@ -38,7 +41,9 @@ class SigningKeyService {
         }
 
     }
-
+    /**
+     * 根据用户ID存储解密用的秘钥Key
+     * */
     public Boolean addKey(String userId, Key signingKey) {
         keys.put(userId,serialize(signingKey));
         return true;

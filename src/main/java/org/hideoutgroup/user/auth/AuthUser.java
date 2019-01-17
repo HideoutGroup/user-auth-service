@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 @Data
 public class AuthUser implements AuthObject {
     public String username;
-    public String password;
     public String role;
     /**有效时长时间*/
     private long expiresSecond;
@@ -20,13 +19,5 @@ public class AuthUser implements AuthObject {
         return username;
     }
 
-    @Override
-    public String toString() {
-        return "AuthUser{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                ", expiresSecond=" + expiresSecond +
-                '}';
-    }
+
 }
