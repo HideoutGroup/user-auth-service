@@ -1,5 +1,6 @@
 package org.hideoutgroup.user.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author 董文强
  * @Time 2019/1/16 21:16
  */
+@Slf4j
 @Service
 class SigningKeyService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SigningKeyService.class);

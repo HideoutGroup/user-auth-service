@@ -3,6 +3,7 @@ package org.hideoutgroup.user.service;
 import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64Codec;
+import lombok.extern.slf4j.Slf4j;
 import org.hideoutgroup.user.auth.AuthObject;
 import org.hideoutgroup.user.auth.AuthUser;
 import org.slf4j.Logger;
@@ -13,14 +14,13 @@ import org.springframework.util.StringUtils;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author 董文强
  * @version 1.0
  * @date 2019年01月10日
  */
+@Slf4j
 @Service
 public class TokenService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenService.class);

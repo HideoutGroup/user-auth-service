@@ -2,12 +2,7 @@ server:
   port: 8091
 spring:
     application:
-        name: base
-    datasource:
-        url: jdbc:mysql://db.sjdong.club:10075/user?characterEncoding=UTF-8
-        username: user
-        password: user1234
-        hikari:
-          connection-timeout: 300
+        name: user-service
 
-       # driver-class-name: com.mysql.jdbc.Driver
+    # driver-class-name: com.mysql.jdbc.Driver
+
