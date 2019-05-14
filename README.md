@@ -1,7 +1,19 @@
 
-1、在 Spring Cloud 环境中
+* 可定用户信息
+  -
+* 多登录方式
+  -
+* 多登录协议
+  - 
+* 可在 Spring Cloud 环境中(未实现)
+* 可单机部署(未实现)
+* 可集群部署(未实现)
+* 高可用(未实现)
+* 框架springboot2.1.x，oauth2，spring5.x，springjpa，mybatis plus
 
-2、框架springboot2.1.x，oauth2，spring5.x，springjpa，mybatis
+用户认证，用户信息，权限信息 (多种存储方式)
+
+![这是一张图片图片](doc/img/http-api.png)
 
 需求
 
@@ -18,3 +30,4 @@
 6、密码模式输入错误一次后需要输入验证码，错误5次将冻结
 
 7、用户冻结、解锁、踢下线、状态查询
+

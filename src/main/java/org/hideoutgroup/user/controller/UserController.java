@@ -2,29 +2,50 @@ package org.hideoutgroup.user.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 /**
- * 〈〉
- *
- * @author wenqiangdong
- * @date   2019-04-29
+ * @author 董文强
+ * @version 1.0
+ * @date 2018年12月18日
  */
-@RestController
-@RequestMapping("/users")
+
+@Controller
+@RequestMapping("/user")
 public class UserController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    @RequestMapping(value = "/current", method = RequestMethod.GET)
-    public Principal getUser(Principal principal) {
-        logger.info(">>>>>>>>>>>>>>>>>>>>>>>>");
-        logger.info(principal.toString());
-        logger.info(">>>>>>>>>>>>>>>>>>>>>>>>");
-        return principal;
+    /**
+     * 根据用户id用户
+     * */
+    @GetMapping
+    public void getUser(Integer id) {
+        return;
     }
+    /**
+     * 添加用户
+     * */
+    @PostMapping
+    public  String addUser(User user) {
+
+        return null;
+    }
+
+    /**
+     * 删除用户
+     * */
+    @DeleteMapping
+    public void deleteUser(Integer id) {
+
+    }
+    /**
+     * 修改用户
+     * */
+    @PutMapping
+    public User updateUser(User user) {
+        return null;
+    }
+
 }

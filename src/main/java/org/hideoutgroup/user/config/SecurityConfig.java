@@ -1,7 +1,7 @@
 package org.hideoutgroup.user.config;
 
-import org.hideoutgroup.user.auth.UserBuild;
-import org.hideoutgroup.user.auth.UserService;
+import org.hideoutgroup.user.oauth.UserBuild;
+import org.hideoutgroup.user.oauth.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

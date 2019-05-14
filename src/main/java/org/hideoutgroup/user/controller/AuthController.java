@@ -3,10 +3,11 @@ package org.hideoutgroup.user.controller;
 import lombok.Data;
 import org.hideoutgroup.user.oauth.AuthObject;
 import org.hideoutgroup.user.oauth.AuthUser;
-import org.hideoutgroup.user.service.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.token.TokenService;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;

@@ -1,4 +1,4 @@
-package org.hideoutgroup.user.auth;
+package org.hideoutgroup.user.oauth;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,12 +19,8 @@ public class AuthUser  implements AuthObject,UserDetails {
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities ;
-    public AuthUser(AuthUser user) {
-        this.id = user.getId();
-        this.authorities = user.getAuthorities();
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-    }
+
+
     public AuthUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.authorities = authorities;
         this.username = username;

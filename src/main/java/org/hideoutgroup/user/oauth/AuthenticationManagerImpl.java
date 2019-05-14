@@ -1,4 +1,4 @@
-package org.hideoutgroup.user.auth;
+package org.hideoutgroup.user.oauth;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

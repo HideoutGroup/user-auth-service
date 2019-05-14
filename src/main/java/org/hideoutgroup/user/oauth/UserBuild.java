@@ -1,4 +1,4 @@
-package org.hideoutgroup.user.auth;
+package org.hideoutgroup.user.oauth;
 
 import org.springframework.security.core.GrantedAuthority;
 

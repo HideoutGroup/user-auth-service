@@ -3,6 +3,4 @@ server:
 spring:
     application:
         name: user-service
-
     # driver-class-name: com.mysql.jdbc.Driver
-
